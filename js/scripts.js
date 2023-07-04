@@ -30,18 +30,33 @@ AddressBook.prototype.deleteContact = function(id) {
 };
 
 // Business Logic for Contacts ---------
-function Contact(firstName, lastName, phoneNumber) {
+function Contact(firstName, lastName, phoneNumber, emailAddress, emailAddressTwo, physAddress, physAddressTwo) {
   this.firstName = firstName;
   this.lastName = lastName;
   this.phoneNumber = phoneNumber;
+  this.emailAddress = emailAddress;
+  this.physAddress = physAddress;
+  this.emailAddressTwo = emailAddressTwo;
+  this.physAddressTwo = physAddressTwo;
 }
 
 Contact.prototype.fullName = function() {
   return this.firstName + " " + this.lastName;
 };
 
+Contact.prototype.emails = function() {
+  return this.emailAddress + ", " + this.emailAddressTwo;
+};
+
+Contact.prototype.addresses = function() {
+  return this.physAddress + ", " + this.physAddressTwo;
+};
+
+
+
 // User Interface Logic ---------
 let addressBook = new AddressBook();
+let workAddressBook = new workAddressBook();
 
 function listContacts(addressBookToDisplay) {
   let contactsDiv = document.querySelector("div#contacts");
@@ -51,10 +66,17 @@ function listContacts(addressBookToDisplay) {
     const contact = addressBookToDisplay.findContact(key);
     const li = document.createElement("li");
     li.append(contact.fullName());
+    li.append("," + " " + contact.phoneNumber);
+    li.append("," + " " + contact.emails());
+    li.append("," + " " + contact.addresses());
     li.setAttribute("id", contact.id);
     ul.append(li);
   });
   contactsDiv.append(ul);
+}
+
+function listContacts(addressBookTwoToDisplay) {
+
 }
 
 function handleFormSubmission(event) {
@@ -62,7 +84,11 @@ function handleFormSubmission(event) {
   const inputtedFirstName = document.querySelector("input#new-first-name").value;
   const inputtedLastName = document.querySelector("input#new-last-name").value;
   const inputtedPhoneNumber = document.querySelector("input#new-phone-number").value;
-  let newContact = new Contact(inputtedFirstName, inputtedLastName, inputtedPhoneNumber);
+  const inputtedEmailAddress = document.querySelector("input#new-email-address").value;
+  const inputtedSecondEmailAddress = document.querySelector("input#new-email-address2").value
+  const inputtedPhysicalAddress = document.querySelector("input#new-physical-address").value;
+  const inputtedSecondPhysicalAddress = document.querySelector("input#new-physical-address2").value;
+  let newContact = new Contact(inputtedFirstName, inputtedLastName, inputtedPhoneNumber, inputtedEmailAddress, inputtedSecondEmailAddress, inputtedPhysicalAddress, inputtedSecondPhysicalAddress);
   addressBook.addContact(newContact);
   listContacts(addressBook);
 }
