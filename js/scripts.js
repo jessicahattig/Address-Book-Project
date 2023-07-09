@@ -30,33 +30,18 @@ AddressBook.prototype.deleteContact = function(id) {
 };
 
 // Business Logic for Contacts ---------
-function Contact(firstName, lastName, phoneNumber, emailAddress, emailAddressTwo, physAddress, physAddressTwo) {
+function Contact(firstName, lastName, phoneNumber) {
   this.firstName = firstName;
   this.lastName = lastName;
   this.phoneNumber = phoneNumber;
-  this.emailAddress = emailAddress;
-  this.physAddress = physAddress;
-  this.emailAddressTwo = emailAddressTwo;
-  this.physAddressTwo = physAddressTwo;
 }
 
 Contact.prototype.fullName = function() {
   return this.firstName + " " + this.lastName;
 };
 
-Contact.prototype.emails = function() {
-  return this.emailAddress + ", " + this.emailAddressTwo;
-};
-
-Contact.prototype.addresses = function() {
-  return this.physAddress + ", " + this.physAddressTwo;
-};
-
-
-
 // User Interface Logic ---------
 let addressBook = new AddressBook();
-let workAddressBook = new workAddressBook();
 
 function listContacts(addressBookToDisplay) {
   let contactsDiv = document.querySelector("div#contacts");
@@ -66,17 +51,18 @@ function listContacts(addressBookToDisplay) {
     const contact = addressBookToDisplay.findContact(key);
     const li = document.createElement("li");
     li.append(contact.fullName());
-    li.append("," + " " + contact.phoneNumber);
-    li.append("," + " " + contact.emails());
-    li.append("," + " " + contact.addresses());
     li.setAttribute("id", contact.id);
     ul.append(li);
   });
   contactsDiv.append(ul);
 }
 
-function listContacts(addressBookTwoToDisplay) {
-
+function displayContactDetails(event) {
+  const contact = addressBook.findContact(event.target.id);
+  document.querySelector(".first-name").innerText = contact.firstName;
+  document.querySelector(".last-name").innerText = contact.lastName;
+  document.querySelector(".phone-number").innerText = contact.phoneNumber;
+  document.querySelector("div#contact-details").removeAttribute("class");
 }
 
 function handleFormSubmission(event) {
@@ -84,15 +70,12 @@ function handleFormSubmission(event) {
   const inputtedFirstName = document.querySelector("input#new-first-name").value;
   const inputtedLastName = document.querySelector("input#new-last-name").value;
   const inputtedPhoneNumber = document.querySelector("input#new-phone-number").value;
-  const inputtedEmailAddress = document.querySelector("input#new-email-address").value;
-  const inputtedSecondEmailAddress = document.querySelector("input#new-email-address2").value
-  const inputtedPhysicalAddress = document.querySelector("input#new-physical-address").value;
-  const inputtedSecondPhysicalAddress = document.querySelector("input#new-physical-address2").value;
-  let newContact = new Contact(inputtedFirstName, inputtedLastName, inputtedPhoneNumber, inputtedEmailAddress, inputtedSecondEmailAddress, inputtedPhysicalAddress, inputtedSecondPhysicalAddress);
+  let newContact = new Contact(inputtedFirstName, inputtedLastName, inputtedPhoneNumber);
   addressBook.addContact(newContact);
   listContacts(addressBook);
 }
 
 window.addEventListener("load", function (){
   document.querySelector("form#new-contact").addEventListener("submit", handleFormSubmission);
+  document.querySelector("div#contacts").addEventListener("click", displayContactDetails);
 });
